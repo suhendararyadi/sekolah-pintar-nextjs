@@ -8,24 +8,33 @@ const EditSiswa = ({ params }: { params: { id: string } }) => {
   const [nama, setNama] = useState("");
   const [nisn, setNisn] = useState("");
   const [kelas, setKelas] = useState("");
-  const [loading, setLoading] = useState(true);  // Untuk menunggu data di-fetch
+  const [kelasOptions, setKelasOptions] = useState([]); // State untuk menyimpan opsi kelas
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Mengambil data siswa berdasarkan ID dan data kelas dari API
   useEffect(() => {
-    // Fetch data siswa berdasarkan ID untuk di-edit
-    async function fetchSiswa() {
+    async function fetchSiswaAndKelas() {
       try {
-        const response = await fetch(`/api/siswa/${params.id}`);
-        const data = await response.json();
-        setNama(data.nama);
-        setNisn(data.nisn);
-        setKelas(data.kelas);
-        setLoading(false);  // Set selesai loading setelah data diterima
+        // Fetch data siswa berdasarkan ID
+        const siswaResponse = await fetch(`/api/siswa/${params.id}`);
+        const siswaData = await siswaResponse.json();
+        setNama(siswaData.nama);
+        setNisn(siswaData.nisn);
+        setKelas(siswaData.kelas);
+
+        // Fetch data kelas untuk dropdown
+        const kelasResponse = await fetch("/api/kelas");
+        const kelasData = await kelasResponse.json();
+        setKelasOptions(kelasData);
+        
+        setLoading(false); // Selesai loading
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
-    fetchSiswa();
+
+    fetchSiswaAndKelas();
   }, [params.id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +63,7 @@ const EditSiswa = ({ params }: { params: { id: string } }) => {
   };
 
   if (loading) {
-    return <div>Loading data...</div>;  // Tampilkan loading saat data belum ada
+    return <div>Loading data...</div>; // Tampilkan loading saat data belum ada
   }
 
   return (
@@ -94,14 +103,19 @@ const EditSiswa = ({ params }: { params: { id: string } }) => {
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
               Kelas
             </label>
-            <input
-              type="text"
+            <select
               value={kelas}
               onChange={(e) => setKelas(e.target.value)}
-              placeholder="Masukkan Kelas"
               className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               required
-            />
+            >
+              <option value="">Pilih Kelas</option>
+              {kelasOptions.map((kelasOption: { id: number; nama_kelas: string }) => (
+                <option key={kelasOption.id} value={kelasOption.nama_kelas}>
+                  {kelasOption.nama_kelas}
+                </option>
+              ))}
+            </select>
           </div>
 
           <button className="w-full rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">

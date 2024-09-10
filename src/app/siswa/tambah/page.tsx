@@ -1,12 +1,28 @@
 "use client";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const TambahSiswa = () => {
   const [nama, setNama] = useState("");
   const [nisn, setNisn] = useState("");
   const [kelas, setKelas] = useState("");
+  const [kelasOptions, setKelasOptions] = useState([]); // State untuk menyimpan data kelas
+
+  useEffect(() => {
+    // Fetch data kelas dari API
+    async function fetchKelas() {
+      try {
+        const response = await fetch("/api/kelas");
+        const data = await response.json();
+        setKelasOptions(data);
+      } catch (error) {
+        console.error("Error fetching kelas:", error);
+      }
+    }
+
+    fetchKelas();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,14 +88,19 @@ const TambahSiswa = () => {
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
               Kelas
             </label>
-            <input
-              type="text"
+            <select
               value={kelas}
               onChange={(e) => setKelas(e.target.value)}
-              placeholder="Masukkan Kelas"
               className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               required
-            />
+            >
+              <option value="">Pilih Kelas</option>
+              {kelasOptions.map((kelasOption: { id: number; nama_kelas: string }) => (
+                <option key={kelasOption.id} value={kelasOption.nama_kelas}>
+                  {kelasOption.nama_kelas}
+                </option>
+              ))}
+            </select>
           </div>
 
           <button className="w-full rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
