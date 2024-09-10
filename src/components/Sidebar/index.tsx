@@ -71,6 +71,7 @@ const menuGroups = [
         ),
         label: "Siswa", // Nama halaman yang baru
         route: "/siswa", // Route untuk halaman Data Siswa
+        children: [{ label: "Tambah", route: "/siswa/tambah" }],
       },
       {
         icon: (
