@@ -68,7 +68,7 @@ export default function DataSiswaTable() {
 
       <div className="flex flex-col">
         <div className="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4">
-          <div className="col-span-2 p-2.5 text-center xl:p-5"> {/* Lebih lebar */}
+          <div className="col-span-2 p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">Nama</h5>
           </div>
           <div className="p-2.5 text-center xl:p-5">
@@ -87,11 +87,16 @@ export default function DataSiswaTable() {
             key={item.id}
             className="grid grid-cols-5 border-b border-stroke dark:border-strokedark"
           >
-            <div className="col-span-2 flex items-center justify-center p-2.5 xl:p-5"> {/* Lebih lebar */}
-              <p className="text-black dark:text-white">{item.nama}</p>
+            <div className="col-span-2 flex items-center justify-center p-2.5 xl:p-5">
+              {/* Link ke halaman profil, tetapi tetap berwarna hitam */}
+              <Link href={`/siswa/${item.id}`}>
+                <p className="text-black dark:text-white hover:underline">
+                  {item.nama}
+                </p>
+              </Link>
             </div>
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">{item.nisn}</p>
+              <p className="text-black dark:text-white">{item.nisn}</p>
             </div>
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
               <p className="text-black dark:text-white">{item.kelas}</p>
