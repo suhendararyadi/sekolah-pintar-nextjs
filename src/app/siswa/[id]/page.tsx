@@ -19,18 +19,16 @@ interface Siswa {
   bio?: string;
 }
 
-// Fungsi untuk mengambil data siswa berdasarkan ID
+// Fungsi untuk mengambil data siswa langsung dari database
 async function getSiswaById(id: string) {
   try {
     const result = await sql`SELECT * FROM siswa WHERE id = ${id};`;
-    console.log("Hasil Query:", result.rows); // Debugging output
 
     if (result.rows.length === 0) {
-      console.log("Siswa tidak ditemukan dengan ID:", id);
-      return null;
+      return null; // Jika tidak ditemukan, kembalikan null
     }
 
-    return result.rows[0];
+    return result.rows[0]; // Kembalikan data siswa yang ditemukan
   } catch (error) {
     console.error("Error fetching siswa data:", error);
     return null;
@@ -57,7 +55,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
               className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
               width={970}
               height={260}
-              priority // Menambahkan properti priority untuk memperbaiki LCP warning
+              priority
             />
           </div>
           <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
@@ -68,7 +66,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
                   width={160}
                   height={160}
                   alt="profile"
-                  priority // Menambahkan properti priority untuk memperbaiki LCP warning
+                  priority
                 />
               </div>
             </div>
@@ -105,7 +103,6 @@ export default async function Profile({ params }: { params: { id: string } }) {
                   Tentang Siswa
                 </h4>
                 <p className="mt-4.5">
-                  {/* Jika bio tersedia, tampilkan, jika tidak, tampilkan pesan default */}
                   {siswa.bio
                     ? siswa.bio
                     : "Belum ada informasi lebih lanjut mengenai siswa ini."}
@@ -117,7 +114,6 @@ export default async function Profile({ params }: { params: { id: string } }) {
                   Sosial Media
                 </h4>
                 <div className="flex items-center justify-center gap-3.5">
-                  {/* Sosial media placeholder */}
                   <Link href="#" className="hover:text-primary" aria-label="social-icon">
                     {/* Facebook icon */}
                     <svg
